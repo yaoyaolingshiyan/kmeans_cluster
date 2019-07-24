@@ -70,17 +70,17 @@ def calcu_iou(set_gt_path):
 
 
 if __name__ == "__main__":
-    # split_train_label = '/home/zmy/work_space/labelxt/train/labelTxt/'
-    # split_val_label = '/home/zmy/work_space/labelxt/val/labelTxt/'
+    split_train_label = '/home/zmy/work_space/labelxt/train/labelTxt/'
+    split_val_label = '/home/zmy/work_space/labelxt/val/labelTxt/'
 
-    split_train_label = 'D:/competition/kmeans_cluster/labelTxt/train/'
-    split_val_label = 'D:/competition/kmeans_cluster/labelTxt/val/'
+    # split_train_label = 'D:/competition/kmeans_cluster/labelTxt/train/'
+    # split_val_label = 'D:/competition/kmeans_cluster/labelTxt/val/'
     name_to_paths = {
         "train": split_train_label,
         "val": split_val_label,
     }
-    # save_path = '/home/zmy/work_space/data_mining/mining_result/'
-    save_path = 'D:/competition/kmeans_cluster/labelTxt/save_iou/'
+    save_path = '/home/zmy/work_space/data_mining/mining_result/'
+    # save_path = 'D:/competition/kmeans_cluster/labelTxt/save_iou/'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     for set_name, set_gt_path in name_to_paths.items():
@@ -95,5 +95,8 @@ if __name__ == "__main__":
         print(set_name, 'iou 的平均值为：', mean_iou)
         print(set_name, 'iou 的最大值为：', max_iou)
         with open(os.path.join(save_path, set_name + "_iou.txt"), "w") as f:
-                f.write('mean:'+str(mean_iou)+':max:'+str(max_iou)+':num:'+str(num_iou))
+            f.write('mean:'+str(mean_iou)+':max:'+str(max_iou)+':num:'+str(num_iou))
+        with open(os.path.join(save_path, set_name + "_every_iou.txt"), "w") as f2:
+            for nu in range(len(iou_list)):
+                f2.write(str(iou_list[nu])+'\n')
 
