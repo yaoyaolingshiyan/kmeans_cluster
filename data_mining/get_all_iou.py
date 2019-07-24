@@ -65,22 +65,18 @@ def calcu_iou(set_gt_path):
         # print(data[i], 'calculated!')
     return iou_list
 
+def iou_path():
+    # split_train_label = '/home/zmy/work_space/labelxt/train/labelTxt/'
+    # split_val_label = '/home/zmy/work_space/labelxt/val/labelTxt/'
 
-
-
-
-if __name__ == "__main__":
-    split_train_label = '/home/zmy/work_space/labelxt/train/labelTxt/'
-    split_val_label = '/home/zmy/work_space/labelxt/val/labelTxt/'
-
-    # split_train_label = 'D:/competition/kmeans_cluster/labelTxt/train/'
-    # split_val_label = 'D:/competition/kmeans_cluster/labelTxt/val/'
+    split_train_label = 'D:/competition/kmeans_cluster/labelTxt/train/'
+    split_val_label = 'D:/competition/kmeans_cluster/labelTxt/val/'
     name_to_paths = {
         "train": split_train_label,
         "val": split_val_label,
     }
-    save_path = '/home/zmy/work_space/data_mining/mining_result/'
-    # save_path = 'D:/competition/kmeans_cluster/labelTxt/save_iou/'
+    # save_path = '/home/zmy/work_space/data_mining/mining_result/'
+    save_path = 'D:/competition/R2CNN/R2CNN_Faster-RCNN_Tensorflow/data\data_mining/mining_result/'
     if not os.path.exists(save_path):
         os.makedirs(save_path)
     for set_name, set_gt_path in name_to_paths.items():
@@ -95,8 +91,55 @@ if __name__ == "__main__":
         print(set_name, 'iou 的平均值为：', mean_iou)
         print(set_name, 'iou 的最大值为：', max_iou)
         with open(os.path.join(save_path, set_name + "_iou.txt"), "w") as f:
-            f.write('mean:'+str(mean_iou)+':max:'+str(max_iou)+':num:'+str(num_iou))
+            f.write('mean:' + str(mean_iou) + ':max:' + str(max_iou) + ':num:' + str(num_iou))
         with open(os.path.join(save_path, set_name + "_every_iou.txt"), "w") as f2:
             for nu in range(len(iou_list)):
-                f2.write(str(iou_list[nu])+'\n')
+                f2.write(str(iou_list[nu]) + '\n')
+
+
+def read_iou():
+    # train_iou_path = 'D:/competition/R2CNN/R2CNN_Faster-RCNN_Tensorflow/data/data_mining/mining_result/train_every_iou.txt'
+    # val_iou_path = 'D:/competition/R2CNN/R2CNN_Faster-RCNN_Tensorflow/data/data_mining/mining_result/val_every_iou.txt'
+    # save_path = 'D:/competition/R2CNN/R2CNN_Faster-RCNN_Tensorflow/data/data_mining/mining_result/calcu_iou'
+
+    train_iou_path = '/home/zmy/work_space/data_mining/mining_result/train_every_iou.txt'
+    val_iou_path = '/home/zmy/work_space/data_mining/mining_result/val_every_iou.txt'
+    save_path = '/home/zmy/work_space/data_mining/mining_result'
+
+    name_to_paths = {
+        "train": train_iou_path,
+        "val": val_iou_path,
+    }
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
+    for set_name, set_iou_path in name_to_paths.items():
+        print('\n')
+        print('*'*10+set_name+'*'*10)
+        not_zero = []
+        with open(set_iou_path, 'r') as f:
+            lines = tqdm(f.readlines())
+            print('\n')
+            print(len(lines))
+            for line in lines:
+                iou_size = float(line.strip())
+                if iou_size == 0.0:
+                    continue
+                else:
+                    not_zero.append(iou_size)
+
+
+        print(set_name, 'without 0 quantity is: ', len(not_zero))
+        not_zero = np.asarray(not_zero)
+        iou_numb = not_zero.mean()
+        print(set_name, 'mean iou is: ', iou_numb)
+        with open(os.path.join(save_path, set_name + "_without_zero_iou_mean.txt"), "w") as f2:
+            f2.write(set_name+':mean:'+str(iou_numb))
+
+
+if __name__ == "__main__":
+    # 计算所有图片iou并保存
+    # iou_path()
+
+    # 对iou进行加工处理
+    read_iou()
 
